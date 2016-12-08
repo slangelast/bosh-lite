@@ -1,10 +1,18 @@
 Vagrant.configure('2') do |config|
   config.vm.box = 'cloudfoundry/bosh-lite'
 
+  # ssh - the id is required to replace the default ssh port forwarding
+  config.vm.network "forwarded_port", guest: 22, host: 6022, id: "ssh"
+  config.vm.define :boshlite do |bl|
+  end
+
   config.vm.provider :virtualbox do |v, override|
     override.vm.box_version = '9000.131.0' # ci:replace
     # To use a different IP address for the bosh-lite director, uncomment this line:
     # override.vm.network :private_network, ip: '192.168.59.4', id: :local
+
+    # Customize the amount of memory on the VM:
+    v.memory = "10240"
   end
 
   config.vm.provider :aws do |v, override|
